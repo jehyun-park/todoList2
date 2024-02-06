@@ -78,7 +78,6 @@ public class TodoService {
 
     //선택한 게시글 조회
     @Transactional
-    //BoardResponseDto 반환 타입, getBoard 메소드 명, Long id: 담을 데이터
     public TodoResponseDto getTodo(Long id) {
         Todo todo = todoRepository.findById(id).orElseThrow(
                 () -> new IllegalArgumentException("글이 존재하지 않습니다.")
@@ -94,7 +93,7 @@ public class TodoService {
         return todoDto;
     }
 
-    //4. 토큰이 있는 경우만 게시글 수정 -> ("아이디가 존재하지 않습니다")
+    //4. 토큰이 있는 경우만 게시글 수정
     @Transactional
     public TodoResponseDto update(Long id, TodoRequestDto requestDto, HttpServletRequest request) {
         String token = jwtUtil.resolveToken(request);
@@ -109,7 +108,7 @@ public class TodoService {
                 throw new IllegalArgumentException("토큰이 유효하지 않습니다");
             }
 
-            // 토큰에서 가져온 사용자 정보를 사용하여 DB 조회 -> 로그인 안했으면 로그인 하라고 메시지
+            // 토큰에서 가져온 사용자 정보를 사용하여 DB 조회
             Todo todo = todoRepository.findById(id).orElseThrow(
                     () -> new IllegalArgumentException("아이디가 존재하지 않습니다")
             );
@@ -128,7 +127,6 @@ public class TodoService {
         Claims claims;
 
         if (token == null) {
-            // 토큰이 없을 경우 예외를 던지거나 적절한 처리를 수행할 수 있습니다.
             throw new IllegalArgumentException("토큰이 존재하지 않습니다");
         }
 
@@ -140,7 +138,6 @@ public class TodoService {
         // 토큰에서 사용자 정보 가져오기
         claims = jwtUtil.getUserInfoFromToken(token);
 
-        // 토큰에서 가져온 사용자 정보를 사용하여 DB 조회 -> 로그인 안했으면 로그인 하라는 메시지
         Todo todo = todoRepository.findById(id).orElseThrow(
                 () -> new IllegalArgumentException("해당 ID에 대한 할 일이 존재하지 않습니다")
         );
