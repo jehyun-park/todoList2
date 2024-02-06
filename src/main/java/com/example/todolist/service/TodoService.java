@@ -37,22 +37,21 @@ public class TodoService {
         String token = jwtUtil.resolveToken(request);
         Claims claims;
 
-        if(token != null){
-            if(jwtUtil.validateToken(token)){
-                claims = jwtUtil.getUserInfoFromToken(token);
-            }else{
-                throw new IllegalArgumentException("유효하지 않은 토큰");
-            }
+        if (token != null && jwtUtil.validateToken(token)) {
+            // 토큰에서 사용자 정보 가져오기
+            claims = jwtUtil.getUserInfoFromToken(token);
 
+            // 토큰에서 가져온 사용자 정보를 사용하여 DB 조회
             User user = userRepository.findByUsername(claims.getSubject()).orElseThrow(
                     () -> new IllegalArgumentException("로그인 후 작성하세요.")
             );
+
             Todo todo = new Todo(requestDto, user.getUsername());
             todo.setUser(user);
             todoRepository.save(todo);
             return new TodoResponseDto(todo);
-        }else{
-            return null;
+        } else {
+            throw new IllegalArgumentException("유효하지 않은 토큰");
         }
     }
 
@@ -99,26 +98,28 @@ public class TodoService {
         String token = jwtUtil.resolveToken(request);
         Claims claims;
 
-        if (token != null) {
-            // 토큰 검증
-            if (jwtUtil.validateToken(token)) {
-                // 토큰에서 사용자 정보 가져오기(claims)
-                claims = jwtUtil.getUserInfoFromToken(token);
-            }else {
-                throw new IllegalArgumentException("토큰이 유효하지 않습니다");
-            }
+        if (token != null && jwtUtil.validateToken(token)) {
+            // 토큰에서 사용자 정보 가져오기(claims)
+            claims = jwtUtil.getUserInfoFromToken(token);
 
             // 토큰에서 가져온 사용자 정보를 사용하여 DB 조회
             Todo todo = todoRepository.findById(id).orElseThrow(
                     () -> new IllegalArgumentException("아이디가 존재하지 않습니다")
             );
+
+            // 게시글을 작성한 사용자와 토큰에서 가져온 사용자 정보가 일치하는지 확인
+            if (!todo.getUser().getUsername().equals(claims.getSubject())) {
+                throw new IllegalArgumentException("해당 게시글을 수정할 수 있는 권한이 없습니다");
+            }
+
             todo.update(requestDto);
             todoRepository.save(todo);
             return new TodoResponseDto(todo);
-        }else {
-            return null;
+        } else {
+            throw new IllegalArgumentException("토큰이 유효하지 않습니다");
         }
     }
+
 
     //선택한 게시글 삭제
     @Transactional
