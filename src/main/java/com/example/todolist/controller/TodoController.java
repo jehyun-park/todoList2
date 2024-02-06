@@ -41,4 +41,11 @@ public class TodoController {
     public DeleteResponseDto delete(@PathVariable Long id, HttpServletRequest request) {
         return todoService.delete(id, request);
     }
+
+    // 6. 할일 상태 변경 localhost:8080/api/todo/1/status?completed= false or true
+    @PutMapping("/todo/{id}/status")
+    public TodoResponseDto todoStatus(@PathVariable Long id, @RequestParam("completed") boolean completed,HttpServletRequest request){
+        return todoService.todoStatus(id,completed,request);
+    }
+
 }

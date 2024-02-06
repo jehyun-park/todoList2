@@ -156,4 +156,33 @@ public class TodoService {
         return new DeleteResponseDto(response);
     }
 
+
+    //할일 상태 변경
+    @Transactional
+    public TodoResponseDto todoStatus(Long id, boolean completed, HttpServletRequest request) {
+        String token = jwtUtil.resolveToken(request);
+        Claims claims;
+
+        if(token == null){
+            throw new IllegalArgumentException("로그인 후 변경하세요.");
+        }
+
+        if(!jwtUtil.validateToken(token)){
+            throw new IllegalArgumentException("토큰이 유효하지 않습니다.");
+        }
+        claims = jwtUtil.getUserInfoFromToken(token);
+
+        Todo todo = todoRepository.findById(id).orElseThrow(
+                    () -> new IllegalArgumentException("해당 ID에 대한 할일이 존재하지 않습니다")
+        );
+
+        String usernameFromToken = claims.getSubject();
+        if(!todo.getUsername().equals(usernameFromToken)){
+            throw new IllegalArgumentException("해당 할일에 대한 권한X");
+        }
+        todo.setCompleted(completed);
+        todoRepository.save(todo);
+
+        return new TodoResponseDto(todo);
+    }
 }
