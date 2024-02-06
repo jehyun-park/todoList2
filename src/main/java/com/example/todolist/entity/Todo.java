@@ -28,7 +28,7 @@ public class Todo extends Timestamped {
     @Column(nullable = false)
     private String content;
 
-    @OneToMany(mappedBy = "todos")
+    @OneToMany(mappedBy = "todos", cascade = CascadeType.REMOVE)
     private List<Comment> commentList = new ArrayList<>();
 
     @ManyToOne
