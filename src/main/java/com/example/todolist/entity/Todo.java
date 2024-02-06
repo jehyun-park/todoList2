@@ -28,6 +28,7 @@ public class Todo extends Timestamped {
     @Column(nullable = false)
     private String content;
 
+    //cascade = CascadeType.REMOVE : 글 삭제시 해당 글의 댓글까지 함께 삭제
     @OneToMany(mappedBy = "todos", cascade = CascadeType.REMOVE)
     private List<Comment> commentList = new ArrayList<>();
 
