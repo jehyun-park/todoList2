@@ -5,8 +5,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Getter
 @Entity
+@Getter
 @NoArgsConstructor
 public class Comment extends Timestamped{
 
@@ -14,19 +14,19 @@ public class Comment extends Timestamped{
     private Long id;
 
     @Column(nullable = false)
-    private String username;
-
-    @Column(nullable = false)
     private String content;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Todo todos;
+    @Column(nullable = false)
+    private String username;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Todo todos;
+
     public Comment(CommentRequestDto requestDto, String username){
-        this.content = requestDto.getContent();
+        this.content=requestDto.getContent();
         this.username = username;
     }
 
@@ -35,11 +35,9 @@ public class Comment extends Timestamped{
         this.username = this.user.getUsername();
     }
 
-    public void setPostsAndUsers(Todo todos, User user){
-        this.todos = todos;
-        this.user = user;
+    public void setTodosAndUsers(Todo todos, User user){
+        this.todos=todos;
+        this.user=user;
         todos.getCommentList().add(this);
     }
-
-
 }

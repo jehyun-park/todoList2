@@ -3,8 +3,8 @@ package com.example.todolist.dto;
 import lombok.Getter;
 import lombok.Setter;
 
-@Getter
 @Setter
+@Getter
 public class LoginResponseDto {
     private String msg;
     private int statusCode;

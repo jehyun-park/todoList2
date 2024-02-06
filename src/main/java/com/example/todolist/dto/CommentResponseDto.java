@@ -1,6 +1,5 @@
 package com.example.todolist.dto;
 
-
 import com.example.todolist.entity.Comment;
 import lombok.Getter;
 import lombok.Setter;
@@ -16,14 +15,11 @@ public class CommentResponseDto {
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
 
-    public CommentResponseDto(Comment comment){
-        this.id=comment.getId();
-        this.content= comment.getContent();
-        this.username=comment.getUsername();
-        this.createdAt=comment.getCreatedAt();
-        this.modifiedAt=comment.getModifiedAt();
+    public CommentResponseDto (Comment comment) {
+        this.id = comment.getId();
+        this.content = comment.getContent();
+        this.username = comment.getUsername();
+        this.createdAt = comment.getCreatedAt();
+        this.modifiedAt = comment.getModifiedAt();
     }
-
-
-
 }

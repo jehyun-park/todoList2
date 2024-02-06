@@ -1,6 +1,6 @@
 package com.example.todolist.controller;
 
-
+import com.example.todolist.dto.DeleteResponseDto;
 import com.example.todolist.dto.TodoRequestDto;
 import com.example.todolist.dto.TodoResponseDto;
 import com.example.todolist.service.TodoService;
@@ -37,9 +37,8 @@ public class TodoController {
         return todoService.update(id, requestDto, request);
     }
     // 5. 선택한 게시글 삭제
-//    @DeleteMapping("/todo/{id}")
-//    public DeleteReponseDto delete(@PathVariable Long id, HttpServletRequest request) {
-//        return todoService.delete(id, request);
-//    }
-
+    @DeleteMapping("/todo/{id}")
+    public DeleteResponseDto delete(@PathVariable Long id, HttpServletRequest request) {
+        return todoService.delete(id, request);
+    }
 }

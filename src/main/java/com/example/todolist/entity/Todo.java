@@ -5,14 +5,17 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
 import java.util.ArrayList;
 import java.util.List;
 
-@Entity
+
 @Getter
+@Setter
+@Entity
 @NoArgsConstructor
-public class Todo extends Timestamped{
+
+public class Todo extends Timestamped {
+
     @Id @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
@@ -20,32 +23,35 @@ public class Todo extends Timestamped{
     private String title;
 
     @Column(nullable = false)
-    private String content;
+    private String username;
 
     @Column(nullable = false)
-    private String username;
+    private String content;
 
     @OneToMany(mappedBy = "todos")
     private List<Comment> commentList = new ArrayList<>();
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="user_id")
+    @ManyToOne
+    @JoinColumn(name = "user_id")
     private User user;
 
-    public Todo(TodoRequestDto requestDto, String username){
+    //생성자
+    //게시글 작성
+    public Todo(TodoRequestDto requestDto, String username) {
         this.title = requestDto.getTitle();
         this.content = requestDto.getContent();
         this.username = username;
     }
 
-    public void update(TodoRequestDto requestDto){
+    //선택한 게시글 수정(변경)
+    public void update(TodoRequestDto requestDto) {
         this.title = requestDto.getTitle();
         this.content = requestDto.getContent();
     }
 
-    // user를 받아서 user에 post를 세팅하기
-    public void setUser(User user) {
+    public void setUser(User user){
         this.user = user;
         user.getTodos().add(this);
     }
+
 }

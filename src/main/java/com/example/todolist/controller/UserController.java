@@ -1,4 +1,5 @@
 package com.example.todolist.controller;
+
 import com.example.todolist.dto.LoginRequestDto;
 import com.example.todolist.dto.LoginResponseDto;
 import com.example.todolist.dto.SignupRequestDto;
@@ -7,16 +8,15 @@ import com.example.todolist.service.UserService;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-@Controller
+@RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/auth")
 public class UserController {
     private final UserService userService;
 
+    // 회원가입
     @PostMapping("/signup")
     public SignupResponseDto signup(@RequestBody @Valid SignupRequestDto signupRequestDto) {
         userService.signup(signupRequestDto);
@@ -29,6 +29,4 @@ public class UserController {
         userService.login(loginRequestDto, response);
         return new LoginResponseDto("로그인 성공", 200);
     }
-
-
 }
